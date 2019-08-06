@@ -16,69 +16,78 @@ using namespace core;
 int func1_encoding()
 {
 	ifstream enFile("InputData/encoded.txt");
-	ofstream writeFile1("OutputData/UTF8_result.txt");
-	ofstream writeFile2("OutputData/UTF16_result.txt");
-	ofstream writeFile3("OutputData/UTF32_result.txt");
-	ofstream writeFile4("OutputData/ASCII_result.txt");
-	ofstream writeFile("OutputData/final_result.txt");
+	string bufferUTF8, bufferUTF16, bufferUTF32, bufferASCII;
+	ofstream writeFile("OutputData/finalResult.txt");
+	ofstream writeLog("OutputData/selectionLog.txt");
 	string buffer;
 
-	int line = 0;
+	int line = 1;
 
 	if (enFile.is_open())
 	{
 		while (enFile.peek() != EOF) {
 			// std::getline은 입력 스트림에서 string으로 한 줄을 읽는다.
 			getline(enFile, buffer);
-			int buflen = buffer.length();
+			unsigned int buflen = buffer.length();
 			int selNum = 0;
 
-			printf("Original Data, [%3d] [%3d] ", line++, buflen);
+			printf("\nOriginal Data [%3d] [%3d] : ", line++, buflen);
 			cout << buffer << endl << endl;
-			string bufferUTF8 = MBSFromUTF8(buffer);
-			cout << "[1]  UTF8 : " << bufferUTF8 << endl;
+			if (buflen != 0)
+			{
+				bufferUTF8 = MBSFromUTF8(buffer.c_str());
+				cout << "[1]  UTF8 : " << bufferUTF8 << endl;
+								
+				WORD* transW = (WORD*)buffer.c_str();
+				bufferUTF16 = MBSFromUTF16(transW, buflen / 2);
+				cout << "[2] UTF16 : " << bufferUTF16 << endl;
 
-			WORD* transW = (WORD*)buffer.c_str();
-			string bufferUTF16 = MBSFromUTF16(transW, buflen / 2);
-			cout << "[2] UTF16 : " << bufferUTF16 << endl;
+				DWORD* transDW = (DWORD*)buffer.c_str();
+				bufferUTF32 = MBSFromUTF32(transDW, buflen / 4 + 1);
+				if (buflen / 4 != 0)
+				{
+					bufferUTF32.pop_back();
+					bufferUTF32.pop_back();
+				}
+				cout << "[3] UTF32 : " << bufferUTF32 << endl;
 
-			DWORD* transDW = (DWORD*)buffer.c_str();
-			string bufferUTF32 = MBSFromUTF32(transDW, buflen / 4);
-			cout << "[3] UTF32 : " << bufferUTF32 << endl;
+				bufferASCII = MBSFromASCII(buffer.c_str());
+				cout << "[4] ASCII : " << bufferASCII << endl;
 
-			string bufferASCII = MBSFromASCII(buffer);
-			cout << "[4] ASCII : " << bufferASCII << endl;
+			}
+			else continue;
 
 			cin >> selNum;
+			writeLog << selNum << endl;
+
 			if (selNum == 1)
 			{
-
+				writeFile << bufferUTF8 << endl;
 			}
 			else if (selNum == 2)
 			{
-
+				writeFile << bufferUTF16 << endl;
 			}
 			else if (selNum == 3)
 			{
-
+				writeFile << bufferUTF32 << endl;
 			}
 			else if (selNum == 4)
 			{
-
+				writeFile << bufferASCII << endl;
 			}
 			else
 			{
-				cout << "none!" << endl;
-				return 0;
+				writeFile << buffer << endl;
 			}
-
-			// 규칙 찾아 조합
-
 		}
 	}
 	else {
 		cout << "파일을 찾을 수 없습니다!" << endl;
 	}
+
+	writeFile.close();
+	writeLog.close();
 
 	return 0;
 }

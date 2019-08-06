@@ -1,3 +1,0 @@
-﻿  Encoding_Proj.cpp
-D:\_Workspace\cppcore-master\Encoding_Proj\Encoding_Proj.cpp(33,32): warning C4267:  'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Encoding_Proj.vcxproj -> D:\_Workspace\cppcore-master\Src\x64\Debug\Encoding_Proj.exe
