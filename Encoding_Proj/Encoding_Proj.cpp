@@ -28,16 +28,18 @@ int func1_encoding()
 		while (enFile.peek() != EOF) {
 			// std::getline은 입력 스트림에서 string으로 한 줄을 읽는다.
 			getline(enFile, buffer);
-			unsigned int buflen = buffer.length();
+			unsigned __int64 buflen = buffer.length();
 			int selNum = 0;
 
-			printf("\nOriginal Data [%3d] [%3d] : ", line++, buflen);
-			cout << buffer << endl << endl;
+			printf("\nOriginal Data [line : %d] [length : %d] \n", line++, buflen);
+
 			if (buflen != 0)
 			{
+				cout << "[0] Blank" << endl;
+
 				bufferUTF8 = MBSFromUTF8(buffer.c_str());
 				cout << "[1]  UTF8 : " << bufferUTF8 << endl;
-								
+
 				WORD* transW = (WORD*)buffer.c_str();
 				bufferUTF16 = MBSFromUTF16(transW, buflen / 2);
 				cout << "[2] UTF16 : " << bufferUTF16 << endl;
@@ -53,10 +55,10 @@ int func1_encoding()
 
 				bufferASCII = MBSFromASCII(buffer.c_str());
 				cout << "[4] ASCII : " << bufferASCII << endl;
-
 			}
 			else continue;
 
+			cout << "Choose Number : ";
 			cin >> selNum;
 			writeLog << selNum << endl;
 
