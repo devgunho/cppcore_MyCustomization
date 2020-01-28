@@ -2,3 +2,6 @@ Build/x64Debug
 Output/x64Debug
 
 Encoding_Proj/x64
+
+Src/.vs
+Src/x64
